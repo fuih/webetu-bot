@@ -1,0 +1,38 @@
+name: Automated WebEtu Meal Reservation
+
+on:
+  schedule:
+    # Runs daily at 20:00 Algeria time (19:00 UTC / UTC+1)
+    - cron: '0 19 * * *'
+  workflow_dispatch:
+    inputs:
+      window:
+        description: 'Number of rolling days ahead to check and book (default: 3)'
+        required: true
+        default: '3'
+      meals:
+        description: 'Meals to book: "lunch dinner", "dinner", or "breakfast lunch dinner"'
+        required: true
+        default: 'lunch dinner'
+
+jobs:
+  book-meals:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Verify Dependencies
+        run: |
+          python3 -c "import requests" 2>/dev/null || (which pip && pip install -r requirements.txt) || true
+
+      - name: Run Meal Reservation
+        env:
+          PROGRES_USERNAME: ${{ secrets.PROGRES_USERNAME }}
+          PROGRES_PASSWORD: ${{ secrets.PROGRES_PASSWORD }}
+          DEFAULT_DEPOT_ID: '312'
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python3 webetu_client.py auto --window ${{ github.event.inputs.window || 3 }} --meals ${{ github.event.inputs.meals || 'lunch dinner' }} --depot 312

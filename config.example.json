@@ -1,0 +1,6 @@
+{
+  "username": "YOUR_BAC_MATRICULE",
+  "password": "YOUR_PROGRES_PASSWORD",
+  "default_depot_id": 312,
+  "default_meals": [2, 3]
+}

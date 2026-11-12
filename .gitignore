@@ -1,0 +1,18 @@
+# Credentials & sensitive config
+config.json
+.env
+
+# Large binaries & APK assets
+*.apk
+Webetu.apk
+assets/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Temporary logs
+*.log
+
